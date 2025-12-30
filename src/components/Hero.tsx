@@ -114,7 +114,7 @@ export default function Hero() {
           className="object-cover opacity-90 contrast-125 brightness-95"
           priority
         />
-        <div className="absolute inset-0 bg-[#0a0a0f]/80 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[#0a0a0f]/60 mix-blend-multiply" />
       </motion.div>
 
       {/* Animated gradient orbs with parallax (Subtle overlay) */}

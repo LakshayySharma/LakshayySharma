@@ -121,7 +121,7 @@ export default function CommandPalette() {
         onClick={() => setIsOpen(true)}
         className="fixed top-6 right-6 z-40 flex items-center gap-2 px-3 py-2 bg-dark-card/80 backdrop-blur-sm border border-dark-border rounded-lg text-gray-400 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all duration-300 group"
       >
-        <Command className="w-4 h-4" />
+        {/* <Command className="w-4 h-4" /> */}
         <span className="text-sm font-mono hidden sm:inline">⌘K</span>
       </motion.button>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Briefcase, Calendar, MapPin } from "lucide-react";
+import { Briefcase, Calendar, MapPin, Download } from "lucide-react";
 
 interface Experience {
   company: string;
@@ -125,6 +125,16 @@ export default function Profile() {
                   B.Tech, Guru Gobind Singh Indraprastha University
                 </p>
               </div>
+
+              {/* Resume Download */}
+              <a
+                href="/Lakshay_Sharma_Resume.pdf"
+                download="Lakshay_Sharma_Resume.pdf"
+                className="mt-6 flex items-center justify-center gap-2 w-full py-3 bg-neon-cyan/10 border border-neon-cyan/30 rounded text-neon-cyan font-mono text-sm hover:bg-neon-cyan/20 transition-all group"
+              >
+                <Download className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
+                <span>Download Resume</span>
+              </a>
             </div>
           </motion.div>
 
