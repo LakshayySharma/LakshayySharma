@@ -156,7 +156,7 @@ export default function Contact() {
               <Linkedin className="w-5 h-5" />
             </a>
             <a
-              href="https://github.com"
+              href="https://github.com/LakshayySharma"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-500 hover:text-neon-cyan transition-colors"
