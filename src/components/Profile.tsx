@@ -38,7 +38,7 @@ const experiences: Experience[] = [
 const operatorSpec: { k: string; v: string }[] = [
   { k: "NAME", v: "Lakshay Sharma" },
   { k: "CLASS", v: "Frontend Architect" },
-  { k: "LEVEL", v: "3+ yrs / 20+ ships" },
+  { k: "LEVEL", v: "4+ yrs / 10+ ships" },
   { k: "SPEC", v: "AI-native, UX-led" },
   { k: "BASE", v: "Delhi NCR, IN" },
   { k: "EDU", v: "B.Tech — GGSIPU" },
