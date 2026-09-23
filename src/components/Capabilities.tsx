@@ -2,99 +2,98 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import SectionHeader from "./SectionHeader";
 
-interface Capability {
+interface Spec {
   name: string;
-  level: number; // 0-100
-  description: string;
+  level: number;
+  detail: string;
 }
 
-const capabilities: Capability[] = [
+const specs: Spec[] = [
   {
-    name: "Frontend Systems",
+    name: "FRONTEND SYSTEMS",
     level: 95,
-    description: "React, Next.js, TypeScript",
+    detail: "React / Next.js / TypeScript",
   },
   {
-    name: "Performance Optimization",
-    level: 90,
-    description: "Core Web Vitals, Memory Management",
+    name: "PERFORMANCE",
+    level: 92,
+    detail: "Core Web Vitals / memory / profiling",
   },
+  { name: "PRODUCT THINKING", level: 88, detail: "A/B / flags / UX" },
   {
-    name: "AI Integration",
-    level: 80,
-    description: "OpenAI, Gemini, Whisper",
-  },
-  {
-    name: "Product Thinking",
+    name: "ARCHITECTURE",
     level: 85,
-    description: "A/B Testing, Feature Flags, UX",
+    detail: "Scalable frontends / API design",
   },
-  {
-    name: "System Architecture",
-    level: 88,
-    description: "Scalable Frontend, API Design",
-  },
-  {
-    name: "Backend Development",
-    level: 75,
-    description: "Node.js, PostgreSQL, Prisma",
-  },
+  { name: "AI INTEGRATION", level: 82, detail: "OpenAI / Gemini / Whisper" },
+  { name: "BACKEND", level: 72, detail: "Node.js / PostgreSQL / Prisma" },
 ];
 
-function CapabilityBar({
-  capability,
-  index,
-}: {
-  capability: Capability;
-  index: number;
-}) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+const extras = [
+  "Service Workers",
+  "WebSockets",
+  "SSE",
+  "WebRTC",
+  "Accessibility",
+  "SEO",
+  "GCP",
+  "Tailwind CSS",
+];
 
-  // Create block visualization (10 blocks total)
-  const totalBlocks = 10;
-  const filledBlocks = Math.round(capability.level / 10);
+function SpecRow({ spec, i }: { spec: Spec; i: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const filled = Math.round(spec.level / 10);
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: -20 }}
-      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group"
+      initial={{ opacity: 0, y: 10 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: i * 0.05 }}
+      className="group py-4"
     >
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-gray-200 font-mono text-sm">
-          {capability.name}
+      {/* Datasheet row: NAME ······················· 95% */}
+      <div className="flex items-baseline">
+        <span className="font-mono text-xs font-semibold tracking-[0.14em] text-foreground sm:text-sm">
+          {spec.name}
         </span>
-        <span className="text-gray-500 font-mono text-xs">
-          {capability.description}
+        <span aria-hidden className="leader" />
+        <span className="font-mono text-xs tabular-nums text-neon-cyan sm:text-sm">
+          {spec.level}%
         </span>
       </div>
-      <div className="flex items-center gap-1">
-        {Array.from({ length: totalBlocks }).map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scaleX: 0 }}
-            animate={
-              isInView ? { opacity: 1, scaleX: 1 } : { opacity: 0, scaleX: 0 }
-            }
-            transition={{
-              duration: 0.3,
-              delay: index * 0.1 + i * 0.05,
-            }}
-            className={`h-4 flex-1 rounded-sm transition-colors duration-300 ${
-              i < filledBlocks
-                ? "bg-neon-cyan group-hover:bg-neon-teal"
-                : "bg-dark-surface border border-dark-border"
-            }`}
-            style={{
-              boxShadow:
-                i < filledBlocks ? "0 0 10px rgba(0, 240, 255, 0.3)" : "none",
-            }}
-          />
-        ))}
+
+      {/* Detail + segmented meter */}
+      <div className="mt-2.5 flex items-center gap-4">
+        <span className="font-mono text-[10px] text-subtle sm:text-[11px]">
+          {spec.detail}
+        </span>
+        <div
+          className="ml-auto flex gap-[3px]"
+          role="meter"
+          aria-label={`${spec.name} proficiency: ${spec.level} percent`}
+          aria-valuenow={spec.level}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        >
+          {Array.from({ length: 10 }).map((_, j) => (
+            <span
+              key={j}
+              className={`h-2 w-4 sm:w-5 ${
+                j < filled
+                  ? "bg-neon-cyan shadow-[0_0_6px_rgba(34,211,238,0.35)]"
+                  : "bg-border"
+              }`}
+              style={{
+                transition: "background-color 400ms ease",
+                transitionDelay: inView ? `${i * 50 + j * 25}ms` : "0ms",
+              }}
+            />
+          ))}
+        </div>
       </div>
     </motion.div>
   );
@@ -104,100 +103,48 @@ export default function Capabilities() {
   return (
     <section
       id="capabilities"
-      className="py-24 px-6 relative bg-dark-surface/30"
+      aria-labelledby="capabilities-heading"
+      className="relative overflow-hidden px-5 py-20 sm:px-10 sm:py-28"
     >
-      <div className="max-w-4xl mx-auto">
-        {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-12"
-        >
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-neon-cyan font-mono text-sm">&gt;</span>
-            <span className="text-gray-500 font-mono text-sm">
-              capabilities --list
-            </span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white">
-            System Capabilities
-          </h2>
-          <p className="text-gray-400 mt-2 font-mono text-sm">
-            Technical proficiency matrix
-          </p>
-        </motion.div>
+      <div className="mx-auto max-w-6xl">
+        <SectionHeader
+          index="002"
+          label="SPECIFICATIONS"
+          title="Spec sheet"
+          headingId="capabilities-heading"
+          blurb="Honest, time-tested proficiency across the stack I ship in daily."
+        />
 
-        {/* Terminal-style container */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-dark-card border border-dark-border rounded-lg overflow-hidden"
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          className="relative border border-border bg-card/70"
         >
-          {/* Terminal header */}
-          <div className="flex items-center gap-2 px-4 py-3 border-b border-dark-border bg-dark-surface/50">
-            <div className="w-3 h-3 rounded-full bg-red-500/70" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
-            <div className="w-3 h-3 rounded-full bg-green-500/70" />
-            <span className="ml-4 text-gray-500 text-xs font-mono">
-              system://capabilities
-            </span>
+          {/* Datasheet header strip */}
+          <div className="flex items-center justify-between border-b border-border bg-surface/60 px-5 py-3">
+            <p className="font-mono text-[10px] tracking-[0.2em] text-muted uppercase sm:text-xs">
+              Doc. LS-SPEC-002
+            </p>
+            <p className="font-mono text-[10px] tracking-[0.2em] text-subtle uppercase sm:text-xs">
+              Self-assessed
+            </p>
           </div>
 
-          {/* Capabilities list */}
-          <div className="p-6 space-y-6">
-            {capabilities.map((capability, index) => (
-              <CapabilityBar
-                key={capability.name}
-                capability={capability}
-                index={index}
-              />
+          {/* Spec rows */}
+          <div className="divide-y divide-border px-5 sm:px-7">
+            {specs.map((spec, i) => (
+              <SpecRow key={spec.name} spec={spec} i={i} />
             ))}
           </div>
 
-          {/* Terminal footer */}
-          <div className="px-4 py-3 border-t border-dark-border bg-dark-surface/30">
-            <div className="flex items-center gap-2 text-xs font-mono text-gray-500">
-              <span className="text-neon-cyan">$</span>
-              <span className="cursor-blink">_</span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Additional skills tags */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-8"
-        >
-          <p className="text-gray-500 font-mono text-xs mb-4">
-            &gt; Additional protocols:
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {[
-              "Service Workers",
-              "WebSockets",
-              "SSE",
-              "Accessibility",
-              "SEO",
-              "Git",
-              "GCP",
-              "Razorpay",
-              "Tailwind CSS",
-              "Material UI",
-            ].map((skill) => (
-              <span
-                key={skill}
-                className="px-3 py-1 text-xs font-mono text-gray-400 bg-dark-card border border-dark-border rounded hover:border-neon-cyan/30 hover:text-neon-cyan transition-colors cursor-default"
-              >
-                {skill}
-              </span>
-            ))}
+          {/* Footnote — the human touch */}
+          <div className="border-t border-border bg-surface/40 px-5 py-4 sm:px-7">
+            <p className="font-mono text-[11px] leading-relaxed text-subtle sm:text-xs">
+              * Values self-assessed, validated in production. Additional
+              protocols: {extras.join(" / ")}.
+            </p>
           </div>
         </motion.div>
       </div>

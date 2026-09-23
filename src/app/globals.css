@@ -1,88 +1,131 @@
 @import "tailwindcss";
 
+/* =============================================================
+   Design Tokens
+   ============================================================= */
 :root {
-  --background: #0a0a0f;
-  --foreground: #e0e0e0;
-  --neon-cyan: #00f0ff;
-  --neon-teal: #0ff0b0;
-  --neon-blue: #4080ff;
-  --neon-purple: #a855f7;
-  --dark-surface: #0f0f18;
-  --dark-card: #12121c;
-  --dark-border: #1a1a2e;
+  /* Surface scale */
+  --background: #06060a;
+  --surface: #0b0b14;
+  --surface-elevated: #10101c;
+  --card: #12121c;
+  --card-hover: #16162a;
+
+  /* Borders */
+  --border: #1c1c2e;
+  --border-strong: #262640;
+
+  /* Text */
+  --foreground: #e6e6ec;
+  --muted: #8b8ba0;
+  --subtle: #5e5e75;
+
+  /* Accents — two-strong system */
+  --neon-cyan: #22d3ee;
+  --neon-teal: #2dd4bf;
+  --neon-amber: #fbbf24;
+  --danger: #f87171;
+
+  /* Hard shadows — brutalist, zero blur */
+  --hard-shadow: 5px 5px 0 0 rgba(34, 211, 238, 0.9);
+  --hard-shadow-sm: 3px 3px 0 0 rgba(34, 211, 238, 0.9);
+
+  /* Sticky header offset */
+  --nav-height: 56px;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-card: var(--card);
+  --color-card-hover: var(--card-hover);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
   --color-neon-cyan: var(--neon-cyan);
   --color-neon-teal: var(--neon-teal);
-  --color-neon-blue: var(--neon-blue);
-  --color-neon-purple: var(--neon-purple);
-  --color-dark-surface: var(--dark-surface);
-  --color-dark-card: var(--dark-card);
-  --color-dark-border: var(--dark-border);
+  --color-neon-amber: var(--neon-amber);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-space-grotesk), var(--font-geist-sans), sans-serif;
 }
 
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--neon-cyan) var(--dark-surface);
-}
-
-*::-webkit-scrollbar {
-  width: 6px;
-}
-
-*::-webkit-scrollbar-track {
-  background: var(--dark-surface);
-}
-
-*::-webkit-scrollbar-thumb {
-  background: var(--neon-cyan);
-  border-radius: 3px;
+/* =============================================================
+   Base
+   ============================================================= */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 16px);
+  background: var(--background);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
-/* CRT Scanlines Effect */
-.crt-overlay {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.15) 0px,
-    rgba(0, 0, 0, 0.15) 1px,
-    transparent 1px,
-    transparent 2px
-  );
-  z-index: 9999;
-  opacity: 0.3;
+/* =============================================================
+   Scrollbar
+   ============================================================= */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 0;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-cyan);
 }
 
-/* Neon Glow Effects */
-.neon-glow {
-  text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan),
-    0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan);
+::selection {
+  background: var(--neon-cyan);
+  color: var(--background);
 }
 
-.neon-glow-subtle {
-  text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px rgba(0, 240, 255, 0.5);
+/* =============================================================
+   Focus — visible, never removed
+   ============================================================= */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--neon-cyan);
+  outline-offset: 3px;
+
 }
 
-.neon-border {
-  box-shadow: 0 0 5px var(--neon-cyan), 0 0 10px rgba(0, 240, 255, 0.3),
-    inset 0 0 5px rgba(0, 240, 255, 0.1);
+/* =============================================================
+   Reduced motion
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-/* Typing cursor animation */
+/* =============================================================
+   Cursor blink — terminal identity
+   ============================================================= */
 @keyframes blink {
   0%,
   50% {
@@ -93,70 +136,158 @@ body {
     opacity: 0;
   }
 }
-
 .cursor-blink {
-  animation: blink 1s infinite;
+  animation: blink 1.05s steps(1) infinite;
 }
 
-/* Screen flicker */
-@keyframes flicker {
+/* =============================================================
+   Ticker marquee — signature band
+   ============================================================= */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 36s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* =============================================================
+   Glitch — RGB split on hover, instant on/off
+   ============================================================= */
+.glitch-hover {
+  transition: text-shadow 120ms ease;
+}
+.glitch-hover:hover,
+.glitch-hover:focus-visible {
+  text-shadow:
+    3px 0 0 rgba(248, 113, 113, 0.55),
+    -3px 0 0 rgba(34, 211, 238, 0.55);
+}
+
+/* =============================================================
+   Brutal hover — hard offset shadow + translate, zero blur
+   ============================================================= */
+.brutal-hover {
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+.brutal-hover:hover,
+.brutal-hover:focus-visible {
+  transform: translate(-3px, -3px);
+  box-shadow: var(--hard-shadow);
+  border-color: var(--neon-cyan);
+}
+
+/* =============================================================
+   Stamp — rubber-stamp status mark
+   ============================================================= */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border: 1.5px solid currentColor;
+  padding: 0.2rem 0.55rem;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: rotate(-2.5deg);
+  opacity: 0.92;
+}
+
+/* =============================================================
+   Dotted leader — datasheet key/value rows
+   ============================================================= */
+.leader {
+  flex: 1 1 auto;
+  border-bottom: 1px dotted var(--border-strong);
+  min-width: 1.5rem;
+  transform: translateY(-0.3em);
+  margin-inline: 0.5rem;
+}
+
+/* =============================================================
+   Outlined display numeral — editorial index
+   ============================================================= */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(34, 211, 238, 0.13);
+}
+
+/* =============================================================
+   Blueprint grid — fine graph paper
+   ============================================================= */
+.blueprint-grid {
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* =============================================================
+   Soft status pulse
+   ============================================================= */
+@keyframes pulse-soft {
   0%,
   100% {
-    opacity: 1;
-  }
-  92% {
-    opacity: 1;
-  }
-  93% {
-    opacity: 0.8;
-  }
-  94% {
-    opacity: 1;
-  }
-  97% {
-    opacity: 0.9;
-  }
-  98% {
-    opacity: 1;
-  }
-}
-
-.flicker {
-  animation: flicker 4s infinite;
-}
-
-/* Breathing animation for background */
-@keyframes breathe {
-  0%,
-  100% {
-    transform: scale(1);
+    opacity: 0.7;
   }
   50% {
-    transform: scale(1.02);
+    opacity: 1;
   }
 }
-
-.breathe {
-  animation: breathe 8s ease-in-out infinite;
+.pulse-soft {
+  animation: pulse-soft 2.4s ease-in-out infinite;
 }
 
-/* Progress bar fill animation */
-@keyframes fillProgress {
-  from {
-    width: 0%;
-  }
+/* =============================================================
+   Local scanlines — Hero bg + avatar only
+   ============================================================= */
+.scanlines {
+  position: relative;
+  overflow: hidden;
 }
-
-.animate-fill {
-  animation: fillProgress 1.5s ease-out forwards;
-}
-
-/* Noise overlay */
-.noise-overlay {
-  position: fixed;
+.scanlines::after {
+  content: "";
+  position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 9998;
-  opacity: 0.02;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(34, 211, 238, 0.06) 0px,
+    rgba(34, 211, 238, 0.06) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: screen;
+}
+
+/* =============================================================
+   Section hairline
+   ============================================================= */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.22) 50%,
+    transparent 100%
+  );
+}
+
+.text-balance {
+  text-wrap: balance;
 }
